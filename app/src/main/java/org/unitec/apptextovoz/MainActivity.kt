@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         //este es un metodo
         Timer("Bienvenida",false).schedule(1000){
             tts!!.speak(
-                    "Hola, Me llamo Jarvis, en que te puedo ayudar",
+                    "Hola, Me llamo Jarvis, porque no te vas y chingas a tu madre puto de mierda",
                     TextToSpeech.QUEUE_FLUSH,
                     null,
                     ""
