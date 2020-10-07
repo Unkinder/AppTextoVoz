@@ -1,9 +1,14 @@
 package org.unitec.apptextovoz
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
 import android.util.Log
+import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.Exception
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -32,11 +37,32 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
 
         //Iniciamos ahora si la variable tts para que ya no este en null
         tts = TextToSpeech(this,this)
+
+        hablar.setOnClickListener {
+            val intent =Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            try{
+                startActivityForResult(intent,CODIGO_PETICION)
+            }catch (e:Exception){
+
+            }
+        }
+
+        //programamos el clicqueo del boton para que interprete lo escrito
+
+        interpretar.setOnClickListener {
+            if (FraseEscrita.text.isEmpty()){
+                Toast.makeText(this,"Debes escribir algo para que lo hable",Toast.LENGTH_SHORT).show()
+            }else{
+                //Este metodo ahorita lo vamos a implementar
+                hablartexto(FraseEscrita.text.toString())
+            }
+        }
+
         //Kemosion!!! VAMOS A ESCUCHAR ESA VOCESITA DE ANDROID, DE BIENVENIDA
         //este es un metodo
         Timer("Bienvenida",false).schedule(1000){
             tts!!.speak(
-                    "Hola, Me llamo Jarvis, porque no te vas y chingas a tu madre puto de mierda",
+                    "Hola, Me llamo Jarvis, bienvenido",
                     TextToSpeech.QUEUE_FLUSH,
                     null,
                     ""
@@ -56,4 +82,36 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
             }
         }
     }
+
+    //Esta funcion es la que nos ayuda interpretar lo que se escriba en el texto de la frase
+
+    fun hablartexto(textoHablar:String){            //queue es para limpar la memoria
+        tts!!.speak(textoHablar, TextToSpeech.QUEUE_FLUSH,null,"")
+    }
+
+    //Este metodo es opcional pero se los recomiendo para limpiar la memoria de esta app cuando la cierren
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (tts!=null){
+            //en el caso de las app de espionaje estos dos renglones nunca se apagan
+            tts!!.stop()
+            tts!!.shutdown()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when(requestCode){
+            CODIGO_PETICION->{
+                if (resultCode== RESULT_OK && null !=data){
+                    val result=data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                    //Finalmente le vamos a decir a nuestro texto estatico que aqui nos muestre lo
+                    //lo que dijimos pero en texto
+                    textointerpretado.setText(result!![0])
+                }
+            }
+        }
+    }
+
 }
