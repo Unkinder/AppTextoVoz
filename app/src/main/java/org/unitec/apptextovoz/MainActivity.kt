@@ -38,6 +38,43 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         //Iniciamos ahora si la variable tts para que ya no este en null
         tts = TextToSpeech(this,this)
 
+        //Invocamos la clase log
+        Log.i("XYZ","Se acaba de iniciar el metodo OnCreate")
+        Log.i("XYZ","Tu edad en dias es "+tuEdadEnDias(21))
+        //El signo de pesos en kotlin se conoce como interpolacion de string
+        Log.i("XYZ", "Tu edad en dias es ${tuEdadEnDias(21)} ya sale bien")
+        //En kotlin las funciones tambien son variables y su ambito se puede definir solo con llaves
+        Log.i("XYZ","La siguiente es otro ejemplo ${4+5} te dara una suma de 9")
+        //En kotlin, ademas de ser orientado a objetos: Tambien es funcional
+        //Es decir las funciones son tratados como una varible
+        var x=2
+        //En kotlin una funcion puede ser declarada dentro de otra porque son tratadas como variables
+        fun funcioncita()={
+            print("Una funcioncita ya con notacion funcional!!");
+        }
+
+
+        //Otro ejemplo con argumentos
+        fun otraFuncion(x:Int, y:Int)={
+          print(  "Esta funcion hace la suma de los argumentos que le pases ${x+y}")
+        }
+
+        Log.i("XYZ", "Mi primer funcion con notacion duncional ${funcioncita()}Listooo!!!!")
+
+        //Se invoca directamente abajo:
+        otraFuncion(5,4)
+
+        //Funciones de orden superior y operado lambda
+
+
+        //Para este ejercicio necesitamos crear una nueva clase
+        class Ejemplito:(Int)->Int{
+            override  fun invoke(p1: Int): Int{
+                TODO("Not yet implemented")
+            }
+        }
+
+
         hablar.setOnClickListener {
             val intent =Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             try{
@@ -114,4 +151,17 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         }
     }
 
+    //Implementamos un metodo o funcion, que es lo mismo
+    fun  saludar( mensaje:String){
+        Log.i("Hola","Un mensaje dentro de kotlin")
+    }
+
+    fun saludar2(mensaje: String):String{
+        return "Mi mensaje de bienvenida"
+    }
+
+    fun tuEdadEnDias(edad:Int):Int{
+        val diasAnio=365
+        return diasAnio*edad
+    }
 }
